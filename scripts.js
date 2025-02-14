@@ -8,9 +8,11 @@ document.addEventListener("DOMContentLoaded", function () {
                     const userId = encodeURIComponent(profile.userId);
                     const displayName = encodeURIComponent(profile.displayName);
 
-                    // 🔹 ใช้ Google Form URL และ Entry ID ที่ถูกต้อง
+                    // ✅ ใส่ค่า Entry ID ที่ถูกต้อง (จาก Google Form)
                     const googleFormBaseUrl = "https://docs.google.com/forms/d/e/1FAIpQLSeTdYwbxDY7G5V3QcmmTtQ63jRHhDQ4i219Y7P-ATLiCv4mGw/viewform";
                     const formUrl = `${googleFormBaseUrl}?entry.891555194=${userId}&entry.24142266=${displayName}`;
+
+                    console.log("Redirecting to:", formUrl); // Debugging URL ที่ถูกส่งไป
 
                     // 🔥 Redirect ไปยัง Google Form พร้อมค่าที่เติมแล้ว
                     window.location.href = formUrl;
