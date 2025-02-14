@@ -5,15 +5,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 liff.login(); // ถ้ายังไม่ได้ล็อกอิน ให้ล็อกอินก่อน
             } else {
                 liff.getProfile().then(profile => {
-                    const userId = encodeURIComponent(profile.userId);
-                    const displayName = encodeURIComponent(profile.displayName);
+                    const userId = encodeURIComponent(profile.userId || "No ID");
+                    const displayName = encodeURIComponent(profile.displayName || "No Name");
 
                     // ✅ ใช้ Google Form URL ที่ถูกต้อง
                     const googleFormBaseUrl = "https://docs.google.com/forms/d/e/1FAIpQLSeTdYwbxDY7G5V3QcmmTtQ63jRHhDQ4i219Y7P-ATLiCv4mGw/viewform";
                     const formUrl = `${googleFormBaseUrl}?entry.891555194=${userId}&entry.24142266=${displayName}`;
 
-                    console.log("Generated Form URL:", formUrl); // ✅ เช็คว่าลิงก์ถูกต้องไหม
-                    window.location.href = formUrl;
+                    console.log("Redirecting to:", formUrl); // ✅ เช็คว่าลิงก์ถูกต้องไหม
+                    window.location.href = formUrl; // ✅ Redirect แทน iframe
                 }).catch(err => console.error("Error getting profile:", err));
             }
         })
