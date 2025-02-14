@@ -1,10 +1,20 @@
 document.addEventListener("DOMContentLoaded", function () {
-    liff.init({ liffId: "2006858965-zwJ5PVO6" }) // เปลี่ยนเป็น LIFF ID ของคุณ
+    console.log("Initializing LIFF...");
+
+    liff.init({ liffId: "2006858965-zwJ5PVO6" }) // 🔹 เปลี่ยนเป็น LIFF ID ของคุณ
         .then(() => {
+            console.log("LIFF initialized!");
+
             if (!liff.isLoggedIn()) {
-                liff.login(); // บังคับล็อกอินถ้ายังไม่ได้ล็อกอิน
-            } else {
-                liff.getProfile().then((profile) => {
+                console.log("User not logged in, redirecting to login...");
+                liff.login(); // 🔹 ถ้ายังไม่ได้ล็อกอิน ให้บังคับล็อกอิน
+                return;
+            }
+
+            console.log("User is logged in, fetching profile...");
+
+            liff.getProfile()
+                .then((profile) => {
                     console.log("LIFF Profile Data:", profile); // ✅ ตรวจสอบค่า profile
 
                     if (!profile || !profile.userId || !profile.displayName) {
@@ -21,8 +31,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     console.log("Redirecting to:", formUrl); // ✅ ตรวจสอบลิงก์
                     window.location.href = formUrl;
-                }).catch((err) => console.error("Error getting profile:", err));
-            }
+                })
+                .catch((err) => console.error("Error getting profile:", err));
         })
         .catch((err) => console.error("LIFF Initialization failed", err));
 });
