@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     const googleFormBaseUrl = "https://docs.google.com/forms/d/e/1FAIpQLSeTdYwbxDY7G5V3QcmmTtQ63jRHhDQ4i219Y7P-ATLiCv4mGw/viewform";
                     const formUrl = `${googleFormBaseUrl}?entry.891555194=${userId}&entry.24142266=${displayName}`;
 
+
                     console.log("Redirecting to:", formUrl); // ✅ เช็คว่าลิงก์ถูกต้องไหม
                     window.location.href = formUrl; // ✅ Redirect แทน iframe
                 }).catch(err => console.error("Error getting profile:", err));
