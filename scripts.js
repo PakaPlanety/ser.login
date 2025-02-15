@@ -19,14 +19,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     // ✅ ส่งข้อมูลไปบันทึกใน Google Sheets
                     fetch(GAS_WEBHOOK_URL, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                            userId: profile.userId,
-                            displayName: profile.displayName
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            mode: "no-cors", // ✅ ป้องกัน CORS Policy
+                            body: JSON.stringify({
+                                userId: profile.userId,
+                                displayName: profile.displayName
+                            })
                         })
-                    })
-                    .then(response => response.json())
+                        .then(response => console.log("Data sent successfully!"))
+                        .catch(error => console.error("Error sending data:", error));
                     .then(data => {
                         console.log("Google Sheets Response:", data);
                         if (data.status === "success") {
