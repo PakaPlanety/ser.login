@@ -29,7 +29,7 @@
                         console.log("Google Sheets Response:", data);
                         if (data.status === "success") {
                             console.log("Data saved successfully! Redirecting...");
-                            window.location.href = "https://docs.google.com/spreadsheets/d/333266750";
+                            window.location.href = "https://forms.gle/wqYv9qzvwsSWHBnUA";
                         } else {
                             console.error("Error saving data:", data.message);
                         }
