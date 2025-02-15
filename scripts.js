@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     .then(data => {
                         console.log("Google Sheets Response:", data);
                         if (data.status === "success") {
-                            console.log("Data saved successfully! Redirecting to Google Form...");
+                            console.log("Redirecting to Google Form:", FORM_URL);
                             window.location.href = FORM_URL; // ✅ Redirect ไปที่ Google Form
                         } else {
                             console.error("Error saving data:", data.message);
