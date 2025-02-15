@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const GAS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxviDQDYBcN5A356e5Gh7QHV_2UMghdS42RueKfZdud9SFEO5EvQU2Zc7lLEZL3HBKK/exec"; // เปลี่ยนเป็น Webhook URL ของ Google Apps Script
+    const GAS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbys3mcl_AKQGqlYCpcPbXe2729gid_2v1ihLBygv6R1EzejBt5Nx_T8SftYS9qSYfa5/exec"; // เปลี่ยนเป็น Webhook URL ของ Google Apps Script
     const FORM_URL = "https://forms.gle/wqYv9qzvwsSWHBnUA"; // เปลี่ยนเป็น URL ของ Google Form
 
     liff.init({ liffId: "2006858965-zwJ5PVO6" })
