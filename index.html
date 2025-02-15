@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,35 +7,54 @@
     <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 </head>
 <body>
-    <div id="loading">กำลังโหลด...</div>
-    <iframe id="form" style="display:none; width:100%; height:100vh; border:none;"></iframe>
+    <div id="loading">กำลังโหลดข้อมูล...</div>
 
     <script>
-        const liffId = "2006858965-zwJ5PVO6"; // ใส่ LIFF ID ที่ได้
-        const formUrl = "https://forms.gle/wqYv9qzvwsSWHBnUA"; // ใส่ URL ของ Google Form
+        const GAS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxviDQDYBcN5A356e5Gh7QHV_2UMghdS42RueKfZdud9SFEO5EvQU2Zc7lLEZL3HBKK/exec"; // เปลี่ยนเป็น Webhook URL ของ Google Apps Script
+        const FORM_URL = "https://docs.google.com/forms/d/e/wqYv9qzvwsSWHBnUA/viewform"; // เปลี่ยนเป็น Google Form ของคุณ
+        const LIFF_ID = "2006858965-zwJ5PVO6"; // เปลี่ยนเป็น LIFF ID ของคุณ
 
-        liff.init({ liffId })
+        liff.init({ liffId: LIFF_ID })
             .then(() => {
                 if (!liff.isLoggedIn()) {
+                    console.log("User not logged in, redirecting to login...");
                     liff.login();
                     return;
                 }
-                
-                liff.getProfile().then(profile => {
-                    const userId = profile.userId;
-                    const displayName = profile.displayName;
-                    
-                    // แสดง Google Form พร้อมข้อมูล LINE
-                    const fullFormUrl = `${formUrl}?prefill_LINE+User+ID=${userId}&prefill_Display+Name=${displayName}`;
-                    document.getElementById('form').src = fullFormUrl;
-                    document.getElementById('form').style.display = 'block';
-                    document.getElementById('loading').style.display = 'none';
-                });
+
+                console.log("User is logged in, fetching profile...");
+                liff.getProfile()
+                    .then(profile => {
+                        console.log("LIFF Profile Data:", profile);
+
+                        // ✅ ส่งข้อมูลไป Google Sheets
+                        fetch(GAS_WEBHOOK_URL, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                userId: profile.userId,
+                                displayName: profile.displayName
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log("Google Sheets Response:", data);
+                            if (data.status === "success") {
+                                console.log("Data saved successfully! Redirecting to Google Form...");
+                                window.location.href = FORM_URL; // ✅ Redirect ไปที่ Google Form
+                            } else {
+                                console.error("Error saving data:", data.message);
+                                document.getElementById('loading').innerText = "เกิดข้อผิดพลาด!";
+                            }
+                        })
+                        .catch(error => console.error("Error sending data:", error));
+                    })
+                    .catch(err => console.error("Error getting profile:", err));
             })
-            .catch(err => {
-                console.error('LIFF Error:', err);
-                alert('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง');
-            });
+            .catch(err => console.error("LIFF Initialization failed", err));
     </script>
+</body>
+</html>
+
 </body>
 </html>
