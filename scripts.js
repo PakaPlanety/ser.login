@@ -29,7 +29,7 @@
                         console.log("Google Sheets Response:", data);
                         if (data.status === "success") {
                             console.log("Data saved successfully! Redirecting...");
-                            window.location.href = "https://docs.google.com/spreadsheets/d/1Xq2hYQrWe7x_GBxFDb8rz83VPaPdX8OPljtWKtlGVbg/edit?resourcekey=&gid=333266750#gid=333266750";
+                            window.location.href = "https://docs.google.com/spreadsheets/d/1Xq2hYQrWe7x_GBxFDb8rz83VPaPdX8OPljtWKtlGVbg/";
                         } else {
                             console.error("Error saving data:", data.message);
                         }
