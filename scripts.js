@@ -1,38 +1,31 @@
 document.addEventListener("DOMContentLoaded", function () {
-    console.log("Initializing LIFF...");
-
-    liff.init({ liffId: "2006858965-zwJ5PVO6" }) // 🔹 เปลี่ยนเป็น LIFF ID ของคุณ
+    liff.init({ liffId: "2006858965-zwJ5PVO6" })
         .then(() => {
             console.log("LIFF initialized!");
-
             if (!liff.isLoggedIn()) {
-                console.log("User not logged in, redirecting to login...");
-                liff.login(); // 🔹 ถ้ายังไม่ได้ล็อกอิน ให้บังคับล็อกอิน
+                liff.login();
                 return;
             }
 
-            console.log("User is logged in, fetching profile...");
-
             liff.getProfile()
                 .then((profile) => {
-                    console.log("LIFF Profile Data:", profile); // ✅ ตรวจสอบค่า profile
-
-                    if (!profile || !profile.userId || !profile.displayName) {
-                        console.error("Error: LIFF profile is missing data");
-                        return;
-                    }
-
-                    const userId = encodeURIComponent(profile.userId);
-                    const displayName = encodeURIComponent(profile.displayName);
-
-                    // ✅ ใช้ Google Form URL ที่ถูกต้อง
-                    const googleFormBaseUrl = "https://docs.google.com/forms/d/e/1FAIpQLSeTdYwbxDY7G5V3QcmmTtQ63jRHhDQ4i219Y7P-ATLiCv4mGw/viewform";
-                    const formUrl = `${googleFormBaseUrl}?entry.891555194=${userId}&entry.24142266=${displayName}`;
-
-                    console.log("Redirecting to:", formUrl); // ✅ ตรวจสอบลิงก์
-                    window.location.href = formUrl;
+                    console.log("LIFF Profile Data:", profile);
+                    
+                    // ✅ ส่งข้อมูลไปยัง Google Sheets ผ่าน Google Apps Script
+                    fetch("https://script.google.com/macros/s/AKfycbxviDQDYBcN5A356e5Gh7QHV_2UMghdS42RueKfZdud9SFEO5EvQU2Zc7lLEZL3HBKK/exec", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            userId: profile.userId,
+                            displayName: profile.displayName
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => console.log("Google Sheets Response:", data))
+                    .catch(error => console.error("Error sending data:", error));
                 })
-                .catch((err) => console.error("Error getting profile:", err));
+                .catch(err => console.error("Error getting profile:", err));
         })
-        .catch((err) => console.error("LIFF Initialization failed", err));
+        .catch(err => console.error("LIFF Initialization failed", err));
 });
+
