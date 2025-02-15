@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
-    console.log("Initializing LIFF...");
+    const GAS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxviDQDYBcN5A356e5Gh7QHV_2UMghdS42RueKfZdud9SFEO5EvQU2Zc7lLEZL3HBKK/exec"; // เปลี่ยนเป็น Webhook URL ของ Google Apps Script
+    const FORM_URL = "https://forms.gle/wqYv9qzvwsSWHBnUA"; // เปลี่ยนเป็น URL ของ Google Form
 
     liff.init({ liffId: "2006858965-zwJ5PVO6" })
         .then(() => {
@@ -16,18 +17,26 @@ document.addEventListener("DOMContentLoaded", function () {
                 .then((profile) => {
                     console.log("LIFF Profile Data:", profile);
 
-                    const userId = encodeURIComponent(profile.userId);
-                    const displayName = encodeURIComponent(profile.displayName);
-                    
-                    // ✅ ตรวจสอบ URL ก่อน Redirect
-                    const formUrl = `https://docs.google.com/spreadsheets/d/1Xq2hYQrWe7x_GBxFDb8rz83VPaPdX8OPljtWKtlGVbg`;
-                    console.log("Generated Form URL:", formUrl);
-
-                    // ✅ เช็คว่า LIFF พยายาม Redirect หรือไม่
-                    setTimeout(() => {
-                        console.log("Redirecting now...");
-                        window.location.href = formUrl;
-                    }, 2000);  // ✅ หน่วงเวลา 2 วินาที เพื่อดู Log ก่อน Redirect
+                    // ✅ ส่งข้อมูลไปบันทึกใน Google Sheets
+                    fetch(GAS_WEBHOOK_URL, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            userId: profile.userId,
+                            displayName: profile.displayName
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("Google Sheets Response:", data);
+                        if (data.status === "success") {
+                            console.log("Data saved successfully! Redirecting to Google Form...");
+                            window.location.href = FORM_URL; // ✅ Redirect ไปที่ Google Form
+                        } else {
+                            console.error("Error saving data:", data.message);
+                        }
+                    })
+                    .catch(error => console.error("Error sending data:", error));
                 })
                 .catch(err => console.error("Error getting profile:", err));
         })
