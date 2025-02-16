@@ -10,8 +10,7 @@
     <div id="loading">กำลังโหลดข้อมูล...</div>
 
     <script>
-        const GAS_WEBHOOK_URL = "https://script.google.com/a/macros/cst.co.th/s/AKfycbyHkVprZaygjabYsFWwfTYW-QN73dvcXhCqsQYsfcn8zCO2Nx7yk_h5j_ZsKzQeYfYE9Q/exec"; // เปลี่ยนเป็น Webhook URL ของ Google Apps Script
-        const FORM_URL = "https://forms.gle/iJBDJDcn3gWgVP8t8"; // เปลี่ยนเป็น Google Form ของคุณ
+        const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdFYFsZ6JSzOeHr9Irv5itgCC2LW1eQ0SPMhZSE2NqowCDI4w/viewform"; // เปลี่ยนเป็น Google Form ของคุณ
         const LIFF_ID = "2006858965-zwJ5PVO6"; // เปลี่ยนเป็น LIFF ID ของคุณ
 
         liff.init({ liffId: LIFF_ID })
@@ -27,33 +26,15 @@
                     .then(profile => {
                         console.log("LIFF Profile Data:", profile);
 
-                        // ✅ ส่งข้อมูลไป Google Sheets
-                        fetch(GAS_WEBHOOK_URL, {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({
-                                userId: profile.userId,
-                            })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            console.log("Google Sheets Response:", data);
-                            if (data.status === "success") {
-                                console.log("Data saved successfully! Redirecting to Google Form...");
-                                window.location.href = FORM_URL; // ✅ Redirect ไปที่ Google Form
-                            } else {
-                                console.error("Error saving data:", data.message);
-                                document.getElementById('loading').innerText = "เกิดข้อผิดพลาด!";
-                            }
-                        })
-                        .catch(error => console.error("Error sending data:", error));
+                        // ✅ สร้าง URL สำหรับ Google Form พร้อม `prefill`
+                        const formRedirectUrl = `${FORM_URL}?entry.1085755425=${encodeURIComponent(profile.userId)}`;
+
+                        console.log("Redirecting to Google Form:", formRedirectUrl);
+                        window.location.href = formRedirectUrl; // ✅ Redirect ไปที่ Google Form
                     })
                     .catch(err => console.error("Error getting profile:", err));
             })
             .catch(err => console.error("LIFF Initialization failed", err));
     </script>
-</body>
-</html>
-
 </body>
 </html>
