@@ -1,46 +1,22 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const GAS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzVOvD2Gk79rcQmZLbegCom1iaMLi0vi0RQylZwolPf0C2GgjgWe7uG4chUD7wvlLvI/exec"; // เปลี่ยนเป็น Webhook URL ของ Google Apps Script
-    const FORM_URL = "https://forms.gle/wqYv9qzvwsSWHBnUA"; // เปลี่ยนเป็น URL ของ Google Form
-
-    liff.init({ liffId: "2006858965-zwJ5PVO6" })
+    liff.init({ liffId: "2006858965-zwJ5PVO6" }) // 🔹 เปลี่ยนเป็น LIFF ID ของคุณ
         .then(() => {
-            console.log("LIFF initialized!");
-
             if (!liff.isLoggedIn()) {
-                console.log("User not logged in, redirecting to login...");
-                liff.login();
-                return;
+                liff.login(); // ถ้ายังไม่ได้ล็อกอิน ให้ล็อกอินก่อน
+            } else {
+                liff.getProfile().then(profile => {
+                    const userId = encodeURIComponent(profile.userId);
+
+                    // ✅ ใช้ Google Form URL ที่ถูกต้อง
+                    const googleFormBaseUrl = "https://docs.google.com/forms/d/1EpYWURCtAhPYh1arJnC2dpABaSma_4i-N0NkZQ0272U/prefill";
+                    const formUrl = `${googleFormBaseUrl}?entry.1085755425=${userId}`;
+
+                    console.log("Redirecting to:", formUrl); // ตรวจสอบ URL ที่ถูกส่งไป
+
+                    // 🔥 Redirect ไปยัง Google Form พร้อมค่าที่เติมแล้ว
+                    window.location.href = formUrl;
+                }).catch(err => console.error("Error getting profile:", err));
             }
-
-            console.log("User is logged in, fetching profile...");
-            liff.getProfile()
-                .then((profile) => {
-                    console.log("LIFF Profile Data:", profile);
-
-                    // ✅ ส่งข้อมูลไปบันทึกใน Google Sheets
-                    fetch(GAS_WEBHOOK_URL, {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            mode: "no-cors", // ✅ ป้องกัน CORS Policy
-                            body: JSON.stringify({
-                                userId: profile.userId,
-                                displayName: profile.displayName
-                            })
-                        })
-                        .then(response => console.log("Data sent successfully!"))
-                        .catch(error => console.error("Error sending data:", error));
-                    .then(data => {
-                        console.log("Google Sheets Response:", data);
-                        if (data.status === "success") {
-                            console.log("Redirecting to Google Form:", FORM_URL);
-                            window.location.href = FORM_URL; // ✅ Redirect ไปที่ Google Form
-                        } else {
-                            console.error("Error saving data:", data.message);
-                        }
-                    })
-                    .catch(error => console.error("Error sending data:", error));
-                })
-                .catch(err => console.error("Error getting profile:", err));
         })
         .catch(err => console.error("LIFF Initialization failed", err));
 });
