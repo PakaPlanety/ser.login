@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     const userId = encodeURIComponent(profile.userId);
 
                     // ✅ ใช้ Google Form URL ที่ถูกต้อง
-                    const googleFormBaseUrl = "https://forms.gle/iJBDJDcn3gWgVP8t8";
+                    const googleFormBaseUrl = "https://forms.gle/nbBAvNGpJcgzHGiR6";
                     const formUrl = `${googleFormBaseUrl}?entry.1085755425=${userId}`;
 
                     console.log("Redirecting to:", formUrl); // ตรวจสอบ URL ที่ถูกส่งไป
